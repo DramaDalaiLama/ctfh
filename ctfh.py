@@ -18,4 +18,6 @@ for key in data['Resources'].keys():
         insts.append(key)
 # pp.pprint(insts)
 
-# TODO
+# TODO go through each instance from 'insts' list, look up their refs in security groups
+# TODO do the same for security groups and subnets
+# TODO form resulting .diag file with schemas describing what instances are in which sec group, show which subnets they are located
