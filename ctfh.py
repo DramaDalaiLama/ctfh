@@ -64,3 +64,8 @@ out = str("blockdiag secgr{\n\t"+'\n\t'.join(lines)+"\n}")
 
 # pp.pprint(out)
 print(out)
+
+print()
+
+for inst in all_instances:
+    pp.pprint(get_ref(data,inst,"Tags"))
