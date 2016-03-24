@@ -60,14 +60,13 @@ for group in all_groups:
             diagram_out[group].append(inst['Instance'])
 
 lines = []
-for key,value in diagram_out.iteritems():
-    for item in value:
-        line = str(key+" -> "+item)
-        lines.append(line)
+for group,insts in diagram_out.iteritems():
+    line = str(group+" -> "+','.join(insts))
+    lines.append(line)
 
 # pp.pprint(lines)
 
-out = str("blockdiag secgr{\n"+'\n'.join(lines)+"\n}")
+out = str("blockdiag secgr{\n\t"+'\n\t'.join(lines)+"\n}")
 
 # pp.pprint(out)
 print(out)
