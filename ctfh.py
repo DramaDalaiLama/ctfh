@@ -59,4 +59,15 @@ for group in all_groups:
         if group in inst['Groups']:
             diagram_out[group].append(inst['Instance'])
 
-# pp.pprint(diagram_out)
+lines = []
+for key,value in diagram_out.iteritems():
+    for item in value:
+        line = str(key+" -> "+item)
+        lines.append(line)
+
+# pp.pprint(lines)
+
+out = str("blockdiag secgr{\n"+'\n'.join(lines)+"\n}")
+
+# pp.pprint(out)
+print(out)
