@@ -9,14 +9,6 @@ with open (filepath, "r") as myfile:
     data=json.load(myfile)
 
 pp = pprint.PrettyPrinter(depth=6)
-# pp.pprint(data)
-
-# pp.pprint(insts)
-
-# TODO go through each instance from 'insts' list, look up their refs in security groups
-# TODO do the same for security groups and subnets
-# TODO form resulting .diag file with schemas describing what instances are in which sec group, show which subnets they are located
-
 
 def list_resource(data, resource):
     # Make list of aws resources
@@ -43,6 +35,7 @@ for inst in all_instances:
 
     groups = []
 
+    # Make a list of all existing groups and diagram set with instances and assigned groups
     for interface in interfaces:
         if interface['DeviceIndex'] == 0:
             for group in interface['GroupSet']:
@@ -51,6 +44,7 @@ for inst in all_instances:
 
     diagram_set.append({"Instance": inst, "Groups": groups})
 
+# Make diagram output. Dict with sec groups and assigned instances
 diagram_out = {}
 
 for group in all_groups:
@@ -59,13 +53,13 @@ for group in all_groups:
         if group in inst['Groups']:
             diagram_out[group].append(inst['Instance'])
 
+# Create list of strings for diagram block
 lines = []
 for group,insts in diagram_out.iteritems():
     line = str(group+" -> "+','.join(insts))
     lines.append(line)
 
-# pp.pprint(lines)
-
+# Join lines for output to file
 out = str("blockdiag secgr{\n\t"+'\n\t'.join(lines)+"\n}")
 
 # pp.pprint(out)
