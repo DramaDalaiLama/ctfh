@@ -57,18 +57,31 @@ diagram_out = {}
 
 vpcs = []
 for group in list(set(all_groups)):
-    diagram_out.update({group: {"Name": group, "Instances": [], "VPC": get_ref(data,group,"VpcId").get('Ref')}})
+    vpc = get_ref(data,group,"VpcId").get('Ref')
+    vpcs.append(vpc)
+    diagram_out.update({group: {"Name": group, "Instances": [], "VPC": vpc}})
     for inst in diagram_set:
         if group in inst['Groups']:
             diagram_out[group]['Instances'].append(inst['Instance'])
 
 # Form diagram groups with sec groups by vpc
+vpcs = list(set(vpcs))
 
+vpc_group_set = {}
+for vpc in vpcs:
+    vpc_group_set.update({vpc: []})
+    for group in all_groups:
+        if diagram_out[group]['VPC'] == vpc:
+            vpc_group_set[vpc].append(group)
 
 # Create list of strings for diagram block
 lines = []
 for group,insts in diagram_out.iteritems():
-    line = str(group+" -> "+','.join(insts))
+    line = str(group+" -> "+','.join(insts['Instances']))
+    lines.append(line)
+
+for vpc,groups in vpc_group_set.iteritems():
+    line = "\n  group {\n" + "label=" + str(vpc) + " color=\"#cccccc\"" + ','.join(groups) + "\n}\n"
     lines.append(line)
 
 # Set options for instance's diagram nodes and write down tags
@@ -91,4 +104,5 @@ print(out)
 # for inst in all_instances:
 #     pp.pprint(get_ref(data,inst,"Tags"))
 
-print diagram_out
+# print diagram_out
+# print vpc_group_set
