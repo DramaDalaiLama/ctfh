@@ -42,7 +42,9 @@ for inst in all_instances:
                 groups.append(group['Ref'])
                 all_groups.append(group['Ref'])
 
-    diagram_set.append({"Instance": inst, "Groups": groups})
+    tags = get_ref(data,inst,"Tags")
+
+    diagram_set.append({"Instance": inst, "Groups": groups, "Tags": tags})
 
 # Make diagram output. Dict with sec groups and assigned instances
 diagram_out = {}
@@ -59,13 +61,20 @@ for group,insts in diagram_out.iteritems():
     line = str(group+" -> "+','.join(insts))
     lines.append(line)
 
+# Set options for instance's diagram nodes and write down tags
+for inst in diagram_set:
+    node_size = 45 + 10 * len(inst['Tags'])
+    label = inst['Instance'] + "\\n\\n"
+    for tag in inst['Tags']:
+        label = label + tag['Key']+"="+tag['Value']+"\\n"
+    label = "\n" + inst['Instance'] +" [" + "label=\"" + label + "\", height=" + str(node_size) + ", width=200]"
+    lines.append(label)
+
 # Join lines for output to file
 out = str("blockdiag secgr{\n\t"+'\n\t'.join(lines)+"\n}")
 
 # pp.pprint(out)
 print(out)
 
-print()
-
-for inst in all_instances:
-    pp.pprint(get_ref(data,inst,"Tags"))
+# for inst in all_instances:
+#     pp.pprint(get_ref(data,inst,"Tags"))
