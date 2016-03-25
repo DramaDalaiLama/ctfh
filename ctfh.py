@@ -20,9 +20,15 @@ def list_resource(data, resource):
 
 def get_ref(data, resource, property):
     refs = data['Resources'][resource]['Properties'][property]
-    result = []
-    for item in refs:
-        result.append(item)
+
+    if isinstance(refs, list):
+        result = []
+        for item in refs:
+            result.append(item)
+    elif isinstance(refs, unicode):
+        result = refs
+    elif isinstance(refs, dict):
+        result = refs
     return result
 
 diagram_set = []
@@ -49,11 +55,15 @@ for inst in all_instances:
 # Make diagram output. Dict with sec groups and assigned instances
 diagram_out = {}
 
+vpcs = []
 for group in list(set(all_groups)):
-    diagram_out.update({group: []})
+    diagram_out.update({group: {"Name": group, "Instances": [], "VPC": get_ref(data,group,"VpcId").get('Ref')}})
     for inst in diagram_set:
         if group in inst['Groups']:
-            diagram_out[group].append(inst['Instance'])
+            diagram_out[group]['Instances'].append(inst['Instance'])
+
+# Form diagram groups with sec groups by vpc
+
 
 # Create list of strings for diagram block
 lines = []
@@ -80,3 +90,5 @@ print(out)
 
 # for inst in all_instances:
 #     pp.pprint(get_ref(data,inst,"Tags"))
+
+print diagram_out
