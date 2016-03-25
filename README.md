@@ -22,9 +22,9 @@ Usage:
 python ctfh.py test.json > test.diag
 ```
 
-This will create <test.png>
+This will create `test.png`
 
-To create a cloudformation template for IAM infrastructure use <getiam.py>
+To create a cloudformation template for IAM infrastructure use `getiam.py`
 Make sure you have your aws credentials exported to environment variables:
 ```bash
 export EC2_ACCESS_KEY=yourawsaccesskey
