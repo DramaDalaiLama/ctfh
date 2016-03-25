@@ -49,7 +49,7 @@ for inst in all_instances:
 # Make diagram output. Dict with sec groups and assigned instances
 diagram_out = {}
 
-for group in all_groups:
+for group in list(set(all_groups)):
     diagram_out.update({group: []})
     for inst in diagram_set:
         if group in inst['Groups']:
