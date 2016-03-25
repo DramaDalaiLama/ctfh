@@ -70,6 +70,8 @@ for inst in diagram_set:
     label = "\n" + inst['Instance'] +" [" + "label=\"" + label + "\", height=" + str(node_size) + ", width=200]"
     lines.append(label)
 
+lines.append("\nspan_width=130")
+
 # Join lines for output to file
 out = str("blockdiag secgr{\n\t"+'\n\t'.join(lines)+"\n}")
 
