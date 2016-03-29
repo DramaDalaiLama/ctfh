@@ -1,2 +1,5 @@
 test.*
 .idea
+*.png
+*.diag
+*.json
