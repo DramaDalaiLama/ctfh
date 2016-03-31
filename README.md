@@ -31,3 +31,8 @@ export EC2_ACCESS_KEY=yourawsaccesskey
 export EC2_SECRET_KEY=yourawssecretkey
 export EC2_REGION=yourawsregion
 ```
+
+To get all iam users description:
+```bash
+aws iam get-account-authorization-details > test.iam.json
+```
