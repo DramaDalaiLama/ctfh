@@ -37,27 +37,33 @@ all_groups = []
 all_instances = list_resource(data, 'AWS::EC2::Instance')
 
 for inst in all_instances:
-    interfaces = get_ref(data,inst,"NetworkInterfaces")
+    try:
+        interfaces = get_ref(data,inst,"NetworkInterfaces")
 
-    groups = []
+        groups = []
 
-    # Make a list of all existing groups and diagram set with instances and assigned groups
-    for interface in interfaces:
-        if interface['DeviceIndex'] == 0:
-            for group in interface['GroupSet']:
-                groups.append(group['Ref'])
-                all_groups.append(group['Ref'])
+        # Make a list of all existing groups and diagram set with instances and assigned groups
+        for interface in interfaces:
+            if interface['DeviceIndex'] == 0:
+                for group in interface['GroupSet']:
+                    groups.append(group['Ref'])
+                    all_groups.append(group['Ref'])
 
-    tags = get_ref(data,inst,"Tags")
+        tags = get_ref(data,inst,"Tags")
 
-    diagram_set.append({"Instance": inst, "Groups": groups, "Tags": tags})
+        diagram_set.append({"Instance": inst, "Groups": groups, "Tags": tags})
+    except:
+        pass
 
 # Make diagram output. Dict with sec groups and assigned instances
 diagram_out = {}
 
 vpcs = []
 for group in list(set(all_groups)):
-    vpc = get_ref(data,group,"VpcId").get('Ref')
+    try:
+        vpc = get_ref(data,group,"VpcId").get('Ref')
+    except:
+        vpc = get_ref(data,group,"VpcId")
     vpcs.append(vpc)
     diagram_out.update({group: {"Name": group, "Instances": [], "VPC": vpc}})
     for inst in diagram_set:
@@ -90,7 +96,7 @@ for inst in diagram_set:
     label = inst['Instance'] + "\\n\\n"
     for tag in inst['Tags']:
         label = label + tag['Key']+"="+tag['Value']+"\\n"
-    label = "\n" + inst['Instance'] +" [" + "label=\"" + label + "\", height=" + str(node_size) + ", width=200]"
+    label = "\n" + inst['Instance'] +" [" + "label=\"" + label + "\", height=" + str(node_size) + ", width=400]"
     lines.append(label)
 
 lines.append("\nspan_width=130")
