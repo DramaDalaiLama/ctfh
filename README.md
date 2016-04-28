@@ -20,6 +20,7 @@ pip install funcparserlib Pillow blockdiag boto
 Usage:
 ```bash
 python ctfh.py test.json > test.diag
+blockdiag test.diag
 ```
 
 This will create `test.png`
